@@ -1,0 +1,42 @@
+\setlength{\topmargin}{0.4cm}
+\setlength{\headheight}{0cm}
+\setlength{\headsep}{0cm}
+\setlength{\textheight}{23.6cm}
+\setlength{\oddsidemargin}{-0.54cm}
+\setlength{\evensidemargin}{-0.54cm}
+\setlength{\columnsep}{0.7cm}
+\setlength{\textwidth}{17.0cm}
+
+\newlength{\abstractwidth}
+\setlength{\abstractwidth}{15cm}
+
+\renewcommand{\baselinestretch}{0.9}
+
+\pagestyle{empty}
+\thispagestyle{empty}
+
+\def\@maketitle{\newpage
+\begin{center}
+%\centering
+	{\LARGE\bf\@title\par}%
+	\vskip 0.5em%
+	{\Large\bf\@etitle\par}%
+	\vskip 1.5em%
+	{\large\begin{tabular}[t]{c}\@author\end{tabular}\par}%
+	\vskip 1.5em%
+	{\large\@affiliation\par}%
+	\vskip 1.5em%
+	\@abstract\par%
+%	\vskip 1.5em
+	\vskip 2.0em
+\end{center}}
+%}
+\long\def\abstract#1{\long\gdef\@abstract{\parbox{\abstractwidth}{{\bf Abstract:} #1}}}
+\long\def\etitle#1{\long\gdef\@etitle{#1}}
+\long\def\affiliation#1{\long\gdef\@affiliation{#1}}
+
+\newcommand{\afil}[1]{\textsuperscript{#1}}
+
+
+
+\twocolumn

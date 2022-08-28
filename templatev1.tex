@@ -1,0 +1,73 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[a4j]{jarticle}
+
+\usepackage{jsaisig}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+% 和文タイトル
+\title{和文タイトル}
+
+% 英文タイトル
+\etitle{English Title} 
+
+% 著者名: 
+%	・各著者を\quad（全角空白）区切りで列挙
+% 	・著者名の直後に\afil{所属番号}を追加→所属番号を上付で出力（\textsuperscript{所属番号}と同じ）
+% 	　複数機関へ所属している場合は番号をカンマ区切りで列挙（下記著者２参照）
+% 　・Corresponding Authorについては所属の後に\thanksを続け，連絡先を記入
+%	・英文著者はカンマ区切りで列挙
+
+\author{著者1氏名\afil{1}%
+	\thanks{連絡先： (所属機関名) \newline%
+		　　　　　　 (所属機関住所) \newline%
+		　　　　　　 E-mail: }\quad%
+	著者2氏名\afil{1,2}\\
+	Author1\afil{1} \quad \quad Author2\afil{1,2}}
+
+% 所属
+\affiliation{%
+	\afil{1} 所属機関1 (和文)\\ 
+	\afil{1} Affiliation 1 (English)\\
+	\afil{2} 所属機関2\\
+	\afil{2} Affiliation 2}
+
+\abstract{
+Abstract (English) comes here.......................................................
+}
+
+\maketitle
+\thispagestyle{empty}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{はじめに}
+
+□□□□□□□□□□□□□□□□□□□□
+□□□□□□□□□□□□□□□□□□□□
+....
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{謝辞}
+
+□□□□□□□□□□□□□□□□□□□□
+□□□□□□□□□□□□□□□□□□□□
+....
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{thebibliography}{99}
+%\small
+
+\bibitem{Sample1}
+First, A., Second, A.:
+Paper Title,
+{\it Journal Name}, Vol.~xx, No.~x, pp.~xx--xx (2007)
+
+\end{thebibliography}
+
+\end{document}
+
