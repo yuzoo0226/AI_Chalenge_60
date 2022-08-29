@@ -10,10 +10,10 @@
 \begin{document}
 
 % 和文タイトル
-\title{Find My Matesに向けた解法の提案と実機への実装}
+\title{Find My Matesに向けた解法の提案と実機実装での性能評価}
 
 % 英文タイトル
-\etitle{JSAI SIGs Conference Paper Format Sample}
+\etitle{Solving Find My Mates and evaluation on Domestic Standard Robot}
 
 % 著者名:
 %	・各著者を\quad（全角空白）区切りで列挙
@@ -48,31 +48,34 @@ Abstract (English) comes here...................................................
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{序論}
-RoboCup@Homeは，人間とロボットのインタラクションを発展させるための国際的なロボット競技会である．
-
-近年，少子高齢化の影響によってホームサービスロボットへの注目が集まっている．
-また，ホームサービスロボットの発展を目的として，RoboCup@Homeが開催されている．
-RoboCup@Homeは，実際の家庭環境を模した部屋でロボットを動作させ，様々なタスクに挑戦し得点を競う大会である．
-
+% テストと競技表記ゆれが起きそうなので，早いうちに確定させる
 \subsection{RoboCup@Home}
-RoboCup@Homeは，サービスロボット技術の発展を目的に開催されている競技会である．
-
+RoboCup@Homeは，ホームサービスロボットの技術発展を目的に開催されている競技会である．
+本競技会では，人間とロボットの協調を目標の一つに掲げており，
+音声認識や物体認識，ナビゲーションといった動的環境におけるテストが行われている，
+そのため，より現実環境を想定した性能評価をすることができ，非常に注目を集めているリーグとなっている．
 % The RoboCup@Home league aims to develop service and assistive robot technology with high relevance for future personal domestic applications. It is the largest international annual competition for autonomous service robots and is part of the RoboCup initiative. A set of benchmark tests is used to evaluate the robots’ abilities and performance in a realistic non-standardized home environment setting. Focus lies on the following domains but is not limited to: Human-Robot-Interaction and Cooperation, Navigation and Mapping in dynamic environments, Computer Vision and Object Recognition under natural light conditions, Object Manipulation, Adaptive Behaviors, Behavior Integration, Ambient Intelligence, Standardization and System Integration. It is colocated with the RoboCup symposium.
-
-\subsection{Human Support Robot}
-Human Support Robot（HSR）はトヨタ自動車が開発したロボットで，
-図\ref{fig:ex1}に，HSRの外観と搭載されているデバイスを示します．
-
+RoboCup@Homeには，Open Platform，Domestic Standard Platform（DSPL），Social Standard Platformという3つのリーグがある．
+私たちの参加しているDSPLでは，トヨタ社が開発したHuman Support Robot（HSR）を標準機に採用しテストを行っている．
+図\ref{overview_hsr}に，HSRの外観と搭載されているデバイスを示す．
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=6cm]{images/hsr_explain_ja.png}
-  \caption{トヨタ社が開発したHSR.}
+  \includegraphics[width=6cm]{images/hsr/hsr_explain_ja.png}
+  \caption{トヨタ社が開発したHSR}
   \label{overview_hsr}
 \end{figure}
+HSRは移動台車やアームに加えて，RGB-Dカメラやマイクが搭載されており，認識を通して多様なヒューマンインタラクションを行うことができる．
+
+本研究では，ヒューマンインタラクションの性能をはかるFind My Matesというテストに向けて，その解法を提案するとともに，HSRへの実機実装を行いRoboCup@Homeでの性能評価を行う．
 
 \subsection{Find My Mates}
+本章では，RoboCup@Homeで行われるFind My Mates（FMM）というタスクについて述べる．
+FMMでは，4人のゲストが1人のホストを訪れたという状況を想定している．
+% しかし，ホストはゲストの名前のみを知っているがその他の情報は何も知らない．
+FMMは，1人のホストの家に訪れた4人のゲストをロボットが探し，その場所，名前に加えて人物の特徴をホストに報告するというタスクである．
+そのため，人物を3次元的に認識する技術と，それぞれのゲストの特徴を抽出する属性推定の技術が必要になる．
+更に，ロボットは事前にゲストの名前を知らされていないため，音声認識を通してゲストの名前を知る必要がある．
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{関連研究}
 
@@ -80,25 +83,24 @@ Human Support Robot（HSR）はトヨタ自動車が開発したロボットで�
 \section{提案手法}
 
 \subsection{音声認識}
+近年ではスマートフォンなどの普及により，Siriなどのクラウドを用いた音声認識の精度が非常に高くなっている．
+しかし，RoboCup@Homeでは会場のネットワークが不安定である場合が想定され，安定したクラウド上での音声認識が困難である．
+また，ネットワークの課題は一般の家庭環境においても想定されるものであり，オフラインでの音声認識技術を利用することは非常に有効である．
+そこで本研究では，vosk\cite{vosk_hp}と呼ばれるオフラインの手法を用いて音声認識を行う．
+
+\subsubsection{辞書設定}
 
 
-\subsection{サブセクション}
-□□□□□□□□□□□□□□□□□□□□
-□□□□□□□□□□□□□□□□□□□□
-%
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=2cm]{images/hsr_front.png}
-  \caption{図の挿入例.}
-  \label{fig:ex1}
-\end{figure}
-%
-□□□□□□□□□□□□□□□□□□□□
-□□□□□□□□□□□□□□□□□□□□
-□□□□□□□□□□□□□□□□□□□□
-□□□□□□□□□□□□□□□□□□□□
-□□□□□□□□□□□□□□□□□□□□
-%
+\subsection{ノイズ除去}
+RoboCup@Homeは実際の家庭環境を模したフィールドで行われるが，実際の家庭環境と異なる点もある．
+その一つが，周囲のノイズが大きいことである．
+RoboCup@Homeの他にも，サッカーリーグやレスキューリーグが同時に行われているため，実際の家庭環境では起きないような大きなノイズが発生する．
+本研究では，音声認識の精度を高めるために，ノイズ除去\cite{sainburg2020finding}を音声認識の前段に組み込み，精度を高めている．
+
+
+\subsection{人物認識}
+
+
 \begin{table}[h]
   \centering
   \caption {表の挿入例.}
@@ -121,7 +123,10 @@ Human Support Robot（HSR）はトヨタ自動車が開発したロボットで�
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{むすび}
+\section{性能評価}
+
+
+\section{結論}
 □□□□□□□□□□□□□□□□□□□□
 □□□□□□□□□□□□□□□□□□□□
 ....
@@ -148,6 +153,20 @@ JSAI SIGs Conference Paper Format Sample,
 第一著者, 第二著者:
 人工知能学会研究会原稿フォーマットサンプル,
 {\it International Journal of Examples}, Vol.~19, No.~4, pp.~1--2 (2007)
+
+\bibitem{vosk_hp}
+https://alphacephei.com/vosk/
+
+
+\bibitem{sainburg2020finding}
+Sainburg, T., Thielk, M., and Gentner, T. Q.,
+% Sainburg, Tim and Thielk, Marvin and Gentner, Timothy Q
+“Finding, visualizing, and quantifying latent structure across diverse animal vocal repertoires,”
+{\it Public Library of Science PLoS computational biology},
+Vol.16,
+No.10,
+pp.e1008228,
+2020.
 
 \end{thebibliography}
 
