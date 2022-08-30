@@ -51,11 +51,12 @@ Abstract (English) comes here...................................................
 % テストと競技表記ゆれが起きそうなので，早いうちに確定させる
 \subsection{RoboCup@Home}
 RoboCup@Homeは，ホームサービスロボットの技術発展を目的に開催されている競技会である．
-本競技会では，人間とロボットの協調を目標の一つに掲げており，
-音声認識や物体認識，ナビゲーションといった動的環境におけるテストが行われている，
+本競技会では，人間とロボットの協調を目標の一つに掲げており，複数のタスクを通して
+音声認識や物体認識，ナビゲーションといった動的環境におけるベンチマークが行われている，
 そのため，より現実環境を想定した性能評価をすることができ，非常に注目を集めているリーグとなっている．
+
 % The RoboCup@Home league aims to develop service and assistive robot technology with high relevance for future personal domestic applications. It is the largest international annual competition for autonomous service robots and is part of the RoboCup initiative. A set of benchmark tests is used to evaluate the robots’ abilities and performance in a realistic non-standardized home environment setting. Focus lies on the following domains but is not limited to: Human-Robot-Interaction and Cooperation, Navigation and Mapping in dynamic environments, Computer Vision and Object Recognition under natural light conditions, Object Manipulation, Adaptive Behaviors, Behavior Integration, Ambient Intelligence, Standardization and System Integration. It is colocated with the RoboCup symposium.
-RoboCup@Homeには，Open Platform，Domestic Standard Platform（DSPL），Social Standard Platformという3つのリーグがある．
+RoboCup@Homeには，Open Platform League，Domestic Standard Platform League（DSPL），Social Standard Platform Leagueという3つのリーグがある．
 私たちの参加しているDSPLでは，トヨタ社が開発したHuman Support Robot（HSR）を標準機に採用しテストを行っている．
 図\ref{overview_hsr}に，HSRの外観と搭載されているデバイスを示す．
 \begin{figure}[ht]
@@ -82,6 +83,9 @@ FMMは，1人のホストの家に訪れた4人のゲストをロボットが探
 
 \section{提案手法}
 
+\subsection{タスクの解法}
+
+
 \subsection{音声認識}
 近年ではスマートフォンなどの普及により，Siriなどのクラウドを用いた音声認識の精度が非常に高くなっている．
 しかし，RoboCup@Homeでは会場のネットワークが不安定である場合が想定され，安定したクラウド上での音声認識が困難である．
@@ -89,41 +93,28 @@ FMMは，1人のホストの家に訪れた4人のゲストをロボットが探
 そこで本研究では，vosk\cite{vosk_hp}と呼ばれるオフラインの手法を用いて音声認識を行う．
 
 \subsubsection{辞書設定}
+RoboCup@Homeでは，タスクに使用される人物名のリストが事前に公開される．
 
+% Some tests in the RoboCup@Home league involve memorizing a person's name. All people in
+% the Arena have an assigned Predened Name chosen by the TC. The list of names contains 25
+% male, 25 female, and 50 gender-neutral names taken from the list of most commonly used names
+% in the United States. Predened names are announced during the Setup Days (see 4).
 
 \subsection{ノイズ除去}
 RoboCup@Homeは実際の家庭環境を模したフィールドで行われるが，実際の家庭環境と異なる点もある．
-その一つが，周囲のノイズが大きいことである．
+その一つが，周囲の外音ノイズが大きいことである．
 RoboCup@Homeの他にも，サッカーリーグやレスキューリーグが同時に行われているため，実際の家庭環境では起きないような大きなノイズが発生する．
-本研究では，音声認識の精度を高めるために，ノイズ除去\cite{sainburg2020finding}を音声認識の前段に組み込み，精度を高めている．
+本研究では，音声認識の精度を高めるために，ノイズ除去\cite{sainburg2020finding}を音声認識の前段に組み込んでいる．
 
 
 \subsection{人物認識}
 
 
-\begin{table}[h]
-  \centering
-  \caption {表の挿入例.}
-  \label{table:ex1}
-  \begin{tabular}{c|cc}
-    \hline
-           & $a_1$ & $a_2$ \\ \hline
-    $x_1$  &  0.1  &  0.1  \\
-    $x_2$  &  0.2  &  0.2  \\ \hline
-  \end{tabular}
-\end{table}
-%
-□□□□□□□□□□□□□□□□□□□□
-□□□□□□□□□□□□□□□□□□□□
-....
+\subsection{属性推定}
 
-図表の参照例：図\ref{fig:ex1},表\ref{fig:ex1}
-
-参考文献の引用例：\cite{Sample1}\cite{Sample2}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{性能評価}
+本研究で提案したFMMの解法をHSRに実装し，2022年7月にタイで行われたRoboCup@Homeにて性能評価を行った．
 
 
 \section{結論}
@@ -157,6 +148,8 @@ JSAI SIGs Conference Paper Format Sample,
 \bibitem{vosk_hp}
 https://alphacephei.com/vosk/
 
+\bibitem{CSRA}
+Zhu, Ke, and Jianxin Wu. “Residual attention: A simple but effective method for multi-label recognition,” Proceedings of the IEEE/CVF International Conference on Computer Vision. 2021.
 
 \bibitem{sainburg2020finding}
 Sainburg, T., Thielk, M., and Gentner, T. Q.,
