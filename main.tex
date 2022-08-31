@@ -85,13 +85,17 @@ FMMは，1人のホストの家に訪れた4人のゲストをロボットが探
 % FMMでは部屋に移動した後，4人のゲストを見つける必要がある．
 
 \subsection{FMMに向けた解法}
-FMMで満点を取得するために，次のような解法を提案する．
-ロボットを部屋の中央までナビゲーションを行い，部屋を見渡しながら人物認識を行う．
-ここで，Depth画像も用いることで，認識した人がmap上のどこにいるのかも同時に算出する．
-次に，認識した人がエリア内のどこにいるかの判定を行う．これには，大きく2つの理由がある．
-1つは，ロケーション報告に用いるためであり，
-もう1つは，フィールド周囲の観客の誤認識を防ぐためである．
-人物の位置情報を基に，
+私達はFMMで満点を取得するために，次のような解法を提案する．
+初めに，ロボットを部屋の中央までナビゲーションを行い，部屋全体を見渡しながら人物認識を行う．
+ここで，Depth画像も用いることで，認識した人がmap上のどこにいるのかを算出する．
+% 次に，認識した人がエリア内のどこにいるかの判定を行う．これには，大きく2つの理由がある．
+% 1つは，ロケーション報告に用いるためであり，
+% もう1つは，フィールド周囲の観客の誤認識を防ぐためである．
+算出した人物の位置情報を基に，各ゲストの正面までナビゲーションを行い，名前を聞く．
+更に，属性推定の手法を用いて，ゲストの性別を推定する．
+
+最後に，取得したすべての情報（人物の画像，位置，名前，性別）を集約した1枚の画像を作成し，
+ヘッドディスプレイに表示することでホストに伝える．
 
 \subsection{音声認識}
 近年ではスマートフォンなどの普及により，Siriなどのクラウドを用いた音声認識の精度が非常に高くなっている．
@@ -117,6 +121,16 @@ RoboCup@Homeの他にも，サッカーリーグやレスキューリーグが�
 % これに定量的な実験結果を載せてもいいと思う
 
 \subsection{人物認識}
+本研究では人物認識の手法にLightweight Human Pose Estimation\cite{light-openpose}を用いた．
+本手法は..........
+RGB画像から人物認識を行った後，Depth画像を参照することで，3次元的な位置を推定する．
+図\ref{human_estimation_explain}に，人物の3次元的な位置推定アルゴリズムを示す．
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=6cm]{images/hsr/hsr_explain_ja.png}
+  \caption{人物位置推定アルゴリズム}
+  \label{human_estimation_explain}
+\end{figure}
 
 \subsection{ロケーション報告}
 
@@ -171,6 +185,10 @@ Vol.16,
 No.10,
 pp.e1008228,
 2020.
+
+\bibitem{light-openpose}
+Osokin, D. "Real-time 2d multi-person pose estimation on cpu: Lightweight openpose." arXiv preprint arXiv:1811.12004 (2018).
+% Osokin, Daniil. "Real-time 2d multi-person pose estimation on cpu: Lightweight openpose." arXiv preprint arXiv:1811.12004 (2018).
 
 \end{thebibliography}
 
