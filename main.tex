@@ -75,7 +75,12 @@ FMMでは，4人のゲストが1人のホストを訪れたという状況を想
 FMMは，1人のホストの家に訪れた4人のゲストをロボットが探し，その場所，名前に加えて人物の特徴をホストに報告するというタスクである．
 そのため，人物を3次元的に認識する技術と，それぞれのゲストの特徴を抽出する属性推定の技術が必要になる．
 更に，ロボットは事前にゲストの名前を知らされていないため，音声認識を通してゲストの名前を知る必要がある．
-
+\begin{figure*}[ht]
+  \centering
+  \includegraphics[width=16cm]{images/FMM/solution_overview_yoko_yy2.png}
+  \caption{FMMの解法}
+  \label{solution_overview}
+\end{figure*}
 
 \section{関連研究}
 
@@ -86,6 +91,14 @@ FMMは，1人のホストの家に訪れた4人のゲストをロボットが探
 
 \subsection{FMMに向けた解法}
 私達はFMMで満点を取得するために，次のような解法を提案する．
+提案する手法の概要を図\ref{solution_overview}に示す．
+% \begin{figure*}[ht]
+%   \centering
+%   \includegraphics[width=18cm]{images/FMM/solution_overview_yoko.png}
+%   \caption{FMMの解法}
+%   \label{solution_overview}
+% \end{figure*}
+
 初めに，ロボットを部屋の中央までナビゲーションを行い，部屋全体を見渡しながら人物認識を行う．
 ここで，Depth画像も用いることで，認識した人がmap上のどこにいるのかを算出する．
 % 次に，認識した人がエリア内のどこにいるかの判定を行う．これには，大きく2つの理由がある．
@@ -134,30 +147,65 @@ RGB画像から人物認識を行った後，Depth画像を参照することで
 
 \subsection{ロケーション報告}
 
-
-図表の参照例：図\ref{fig:ex1},表\ref{fig:ex1}
-
-参考文献の引用例：\cite{Sample1}\cite{Sample2}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{性能評価}
+\section{現地実験概要}
+提案手法をHSRに実装し，2022年7月にバンコクで行われたRoboCup@Homeで性能評価を行った．
+図\ref{robocup_field}に，実際に使用されたフィールドを示す．
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=6cm]{images/robocup/arenaBangkok_rotate.png}
+  \caption{バンコクで開催されたRoboCup@Home2022で使用されたフィールド}
+  \label{robocup_field}
+\end{figure}
+4つのルームがある中で，FMMはリビングルームにて実施された．
+現地の実際の写真を図\ref{onsite_overview_1}に示す．
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=6cm]{images/robocup/FMM_onsite_overview_1.jpg}
+  \caption{FMMが行われた実際の会場}
+  \label{onsite_overview_1}
+\end{figure}
+
+
+\section{現地実験結果}
+1度目のトライでは，ナビゲーションの目的地がゲストから遠い位置であったため，
+遠距離から認識することとなり，不鮮明・不明瞭な画像を取得することとなった．
+人物検出と3次元の位置推定は正常に動作したが，画像が不鮮明であったため，属性推定に失敗した．
+また，音声認識では認識結果を得ることが出来ず，QRコードによるバイパスを用いた．
+結果は，属性推定の結果があっていないこと，ヘッドディスプレイに表示した人物画像が不明瞭であったため，
+0点であった．
+
+2度目のトライは，1度目にあったナビゲーションの目的地が遠いという問題点を修正してから行った．
+その結果，人物をより近い位置から認識することが出来たため，
+鮮明な画像を得ることができ，属性推定も間違いなく動作した．
+しかし，音声認識部においてはゲストの前までナビゲーションを行うことは出来ていたが，
+名前を聞き取ることは出来ずまたQRコードのバイパスを使用することとなった．
+2度目のトライにおいて，フィールド内の状況を説明するために生成した画像を図\ref{result_FMM_2}に示す．
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=7cm]{images/FMM/mapimage.png}
+  \caption{2回目のトライで作成したマップイメージ}
+  \label{result_FMM_2}
+\end{figure}
+
+% 参加チームごとのFMMで取得した点数を表\ref{fmm_points_eachcheam}にまとめる．
+% \begin{table}[h]
+% \begin{tabular}{ll}
+%                              & Find My Mates \\
+% Hibikino-Musashi@Home (ours) & \textbf{1000} \\
+% Tech United Eindhoven        & \textbf{1000} \\
+% Team ORIon                   & 0
+% \end{tabular}
+% \label{fmm_points_eachcheam}
+% \end{table}
+
+
+\section{考察}
 
 
 \section{結論}
-□□□□□□□□□□□□□□□□□□□□
-□□□□□□□□□□□□□□□□□□□□
-....
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section*{謝辞}
-
-□□□□□□□□□□□□□□□□□□□□
-□□□□□□□□□□□□□□□□□□□□
-....
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{thebibliography}{99}
 %\small
