@@ -13,7 +13,7 @@
 \title{Find My Matesに向けた解法の提案と実機での性能評価}
 
 % 英文タイトル
-\etitle{Solving Find My Mates and evaluation on Domestic Standard Robot}
+\etitle{Solution of Find My Mates and evaluation on Domestic Standard Robot}
 
 % 著者名:
 %	・各著者を\quad（全角空白）区切りで列挙
@@ -39,7 +39,12 @@
 	\afil{2} Research Center for Neuromorphic AI Hardware, Kyushu Institute of Technology, Japan}
 
 \abstract{
-Abstract (English) comes here.......................................................
+% Abstract (English) comes here.......................................................
+ホームサービスロボットの技術発展を目的として，RoboCup@Homeという競技会が開催されている．
+RoboCup@Homeでは，実際の家庭環境を模したフィールドを用いてタスクを行うことで，より現実に近い環境でロボットの性能を評価することができる．
+本研究では，RoboCup@Homeのタスクの一つであるFind My Matesに向けて，満点を取得するための手法を提案する．
+また，提案した手法をロボットに実装し，2022年7月にバンコクで行われたRoboCup@Homeにて現地実験を行った．
+現地実験では課題も合ったが満点を取得し，提案手法の有効性を示した．
 }
 
 \maketitle
@@ -120,7 +125,7 @@ FMMは，1人のホストの家に訪れた4人のゲストをロボットが探
 HSRのヘッド部に搭載されているマイクを用いて，一定時間録音する．
 次に，録音した音声をROSを介してPCに送信する．
 ここで，ROSには音声ファイルをそのまま送信できるメッセージ型がないため，音声ファイルをnumpyの配列に読み直して送信を行う．
-PC側では，受信したnumpyの配列から音声ファイルを再構築し，
+PC側では，受信したnumpyの配列から音声ファイルを再構築し，音声認識を行う．
 % 音声ファイルをROSで通信したことも書く．
 % 音声認識を一定時間で行っていることも書く
 % 音声認識の結果の評価があっても面白い
@@ -142,6 +147,31 @@ RoboCup@Homeは実際の家庭環境を模したフィールドで行われる�
 RoboCup@Homeの他にも，サッカーリーグやレスキューリーグが同時に行われているため，実際の家庭環境では起きないような大きなノイズが発生する．
 本研究では，音声認識の精度を高めるために，ノイズ除去\cite{sainburg2020finding}を音声認識の前段に組み込み，精度を高めている．
 % これに定量的な実験結果を載せてもいいと思う
+
+\subsubsection{音声認識の性能評価}
+RoboCup@Homeで使用される名前は，アメリカで一般的に用いられる名前からランダムに決定される．
+そこで，本研究で作成した音声認識の性能を評価するため，
+アメリカで一般的に使用されている名前から男女それぞれ名前を11個選出し，認識精度を検証した．
+検証はノイズの大きな環境で行い，話者とノイズの環境を変化させながらそれぞれ4度ずつ読み上げて検証を行った．
+
+表\ref{voice_recognition_result}に，ノイズ除去を行った場合と辞書指定を行った場合における認識結果を示す．
+\begin{table}
+\centering
+\begin{tabular}{|l|l|}
+\hline
+                 & 認識精度 (\%)      \\
+\hline
+ノイズ除去なし ＋ 辞書指定あり & 69.3           \\
+\hline
+ノイズ除去あり ＋ 辞書指定あり & \textbf{71.6}  \\
+\hline
+ノイズ除去あり ＋ 辞書指定なし & 10.2           \\
+\hline
+\end{tabular}
+\label{voice_recognition_result}
+\end{table}
+
+
 
 \subsection{人物認識}
 本研究では人物認識の手法にLightweight Human Pose Estimation\cite{light-openpose}を用いた．
@@ -236,6 +266,9 @@ RGB画像から人物認識を行った後，Depth画像を参照することで
 
 \begin{thebibliography}{99}
 %\small
+
+\bibitem{robocup_hp}
+RoboCup@Home. https://www.robocup.org/domains/3, (Accessed 2022-09-01).
 
 \bibitem{vosk}
 Author, A., Author, B.:
