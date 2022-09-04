@@ -4,6 +4,9 @@
 \usepackage{jsaisig}
 % \usepackage{graphicx}
 \usepackage[dvipdfmx]{graphicx}
+\usepackage{subfigure}
+\usepackage{multirow}
+% \usepackage{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -44,7 +47,7 @@
 RoboCup@Homeでは，実際の家庭環境を模したフィールドを用いてタスクを行うことで，より現実に近い環境でロボットの性能を評価することができる．
 本研究では，RoboCup@Homeのタスクの一つであるFind My Matesに向けて，満点を取得するための手法を提案する．
 また，提案した手法をロボットに実装し，2022年7月にバンコクで行われたRoboCup@Homeにて現地実験を行った．
-現地実験では課題も合ったが満点を取得し，提案手法の有効性を示した．
+現地実験では満点を取得し，提案手法の有効性を示した．
 }
 
 \maketitle
@@ -73,6 +76,14 @@ HSRは移動台車やアームに加えて，RGB-Dカメラやマイクが搭載
 
 本研究では，ヒューマンインタラクションの性能をはかるFind My Matesというテストに向けて，その解法を提案するとともに，HSRへの実機実装を行いRoboCup@Homeでの性能評価を行う．
 
+% 2ページ目の先頭に持ってくるため
+\begin{figure*}[ht]
+  \centering
+  \includegraphics[width=16cm]{images/FMM/solution_overview_yoko_yy2.png}
+  \caption{FMMの解法}
+  \label{solution_overview}
+\end{figure*}
+
 \subsection{Find My Mates}
 本章では，RoboCup@Homeで行われるFind My Mates（FMM）というタスクについて述べる．
 FMMでは，4人のゲストが1人のホストを訪れたという状況を想定している．
@@ -80,12 +91,6 @@ FMMでは，4人のゲストが1人のホストを訪れたという状況を想
 FMMは，1人のホストの家に訪れた4人のゲストをロボットが探し，その場所，名前に加えて人物の特徴をホストに報告するというタスクである．
 そのため，人物を3次元的に認識する技術と，それぞれのゲストの特徴を抽出する属性推定の技術が必要になる．
 更に，ロボットは事前にゲストの名前を知らされていないため，音声認識を通してゲストの名前を知る必要がある．
-\begin{figure*}[ht]
-  \centering
-  \includegraphics[width=16cm]{images/FMM/solution_overview_yoko_yy2.png}
-  \caption{FMMの解法}
-  \label{solution_overview}
-\end{figure*}
 
 \section{関連研究}
 
@@ -97,13 +102,6 @@ FMMは，1人のホストの家に訪れた4人のゲストをロボットが探
 \subsection{FMMに向けた解法}
 私達はFMMで満点を取得するために，次のような解法を提案する．
 提案する手法の概要を図\ref{solution_overview}に示す．
-% \begin{figure*}[ht]
-%   \centering
-%   \includegraphics[width=18cm]{images/FMM/solution_overview_yoko.png}
-%   \caption{FMMの解法}
-%   \label{solution_overview}
-% \end{figure*}
-
 初めに，ロボットを部屋の中央までナビゲーションを行い，部屋全体を見渡しながら人物認識を行う．
 ここで，Depth画像も用いることで，認識した人がmap上のどこにいるのかを算出する．
 % 次に，認識した人がエリア内のどこにいるかの判定を行う．これには，大きく2つの理由がある．
@@ -148,44 +146,65 @@ RoboCup@Homeの他にも，サッカーリーグやレスキューリーグが�
 本研究では，音声認識の精度を高めるために，ノイズ除去\cite{sainburg2020finding}を音声認識の前段に組み込み，精度を高めている．
 % これに定量的な実験結果を載せてもいいと思う
 
-\subsubsection{音声認識の性能評価}
+\subsection{音声認識の性能評価}
 RoboCup@Homeで使用される名前は，アメリカで一般的に用いられる名前からランダムに決定される．
 そこで，本研究で作成した音声認識の性能を評価するため，
 アメリカで一般的に使用されている名前から男女それぞれ名前を11個選出し，認識精度を検証した．
 検証はノイズの大きな環境で行い，話者とノイズの環境を変化させながらそれぞれ4度ずつ読み上げて検証を行った．
 
 表\ref{voice_recognition_result}に，ノイズ除去を行った場合と辞書指定を行った場合における認識結果を示す．
-\begin{table}
-\centering
-\begin{tabular}{|l|l|}
-\hline
-                 & 認識精度 (\%)      \\
-\hline
-ノイズ除去なし ＋ 辞書指定あり & 69.3           \\
-\hline
-ノイズ除去あり ＋ 辞書指定あり & \textbf{71.6}  \\
-\hline
-ノイズ除去あり ＋ 辞書指定なし & 10.2           \\
-\hline
-\end{tabular}
-\label{voice_recognition_result}
+\begin{table}[]
+	\centering
+	\caption{音声認識の精度}
+	\begin{tabular}{|c|c|c|}
+	\hline
+	辞書指定                & ノイズ除去 & 認識精度(\%)          \\ \hline
+	\multirow{2}{*}{なし} & なし    & 13.6          \\ \cline{2-3}
+	                    & あり    & 10.2          \\ \hline
+	\multirow{2}{*}{あり} & なし    & 69.3          \\ \cline{2-3}
+	                    & あり    & \textbf{71.6} \\ \hline
+	\end{tabular}
+	\label{voice_recognition_result}
 \end{table}
-
-
 
 \subsection{人物認識}
 本研究では人物認識の手法にLightweight Human Pose Estimation\cite{light-openpose}を用いた．
-本手法は..........
-RGB画像から人物認識を行った後，Depth画像を参照することで，3次元的な位置を推定する．
-図\ref{human_estimation_explain}に，人物の3次元的な位置推定アルゴリズムを示す．
+本手法は処理が非常に軽量であり，CPUでも高速に動作できる手法である．
+今回使用したPCでは，x fpsで動作しており，HSRのカメラ周期と同等な速度である為，
+リアルタイム動作を実現できていると言える．
+本研究では，人物を3次元的に認識する必要があるため，RGB画像から人物認識を行った後，
+認識位置のDepth画像を参照することで，3次元的な位置を推定する．
+図\ref{human_estimation_explain}に，人物の3次元的な位置推定を行った結果を示す．
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=6cm]{images/hsr/hsr_explain_ja.png}
+  \subfigure[RGB画像での認識結果]{
+  	\includegraphics[height=3cm]{images/human_recognition/image.png}
+	\label{human_estimation_image}
+	% \caption{RGB画像での認識結果}
+  }
+  % \subfigure[Depth画像と合わせた3次元の位置推定]{
+  \subfigure[3次元の位置推定]{
+  	\includegraphics[height=3cm]{images/human_recognition/ss_4_trim.png}
+	\label{human_estimation_pc}
+	% \caption{Depth画像と合わせた3次元の位置推定}
+  }
   \caption{人物位置推定アルゴリズム}
   \label{human_estimation_explain}
 \end{figure}
 
 \subsection{ロケーション報告}
+FMMでは，認識した人物をホストに伝える必要があるが，この際に考慮すべきこととして，
+認識した人が本当に部屋の中にいる人なのか，部屋の中のどこにいるのかを識別する必要がある．
+そこで本研究では，事前に作成しているマップに対してjsonファイルを用いて意味づけを行い，フィールド内判定を行う．
+またRoboCup@Homeでは，事前に部屋の形が公開されるため部屋の中のどこに椅子があるのかという意味づけも行う．
+人物のフィールド内判定と，位置推定の結果を図\ref{human_where_map}に示す．
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=6cm]{images/human_recognition/ss_5_trim.png}
+  \caption{図\ref{human_estimation_explain}で認識した結果にエリア判定を付加した結果}
+  \label{human_where_map}
+\end{figure}
+この場合では，ゲストはフィールド内の左側の椅子に座っており，それを正しく判定できている．
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -209,7 +228,12 @@ RGB画像から人物認識を行った後，Depth画像を参照することで
 \end{figure}
 
 
-\section{現地実験結果}
+\section{現地実験}
+\subsection{実験概要}
+RoboCup@HomeのDSPLでは，HSRにPCを接続して使用することが認められている．
+本研究で使用したPC環境は，CPU：Intel core, GPU：Geforce RTX 1080，メモリ：64GB，OS：Ubuntu18.04である．
+
+\subsection{実験結果}
 1度目のトライでは，ナビゲーションの目的地がゲストから遠い位置であったため，
 遠距離から認識することとなり，不鮮明・不明瞭な画像を取得することとなった．
 人物検出と3次元の位置推定は正常に動作したが，画像が不鮮明であったため，属性推定に失敗した．
