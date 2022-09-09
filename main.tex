@@ -69,7 +69,7 @@ RoboCup@Home\cite{robocup_hp}は，ホームサービスロボットの技術発
 そのため，より現実に近い家庭環境でロボットの性能を評価することができ，非常に注目を集めている．
 % The RoboCup@Home league aims to develop service and assistive robot technology with high relevance for future personal domestic applications. It is the largest international annual competition for autonomous service robots and is part of the RoboCup initiative. A set of benchmark tests is used to evaluate the robots’ abilities and performance in a realistic non-standardized home environment setting. Focus lies on the following domains but is not limited to: Human-Robot-Interaction and Cooperation, Navigation and Mapping in dynamic environments, Computer Vision and Object Recognition under natural light conditions, Object Manipulation, Adaptive Behaviors, Behavior Integration, Ambient Intelligence, Standardization and System Integration. It is colocated with the RoboCup symposium.
 RoboCup@Homeには，Open Platform League，Domestic Standard Platform League（DSPL），Social Standard Platform Leagueという3つのリーグがある．
-私たちの参加しているDSPLでは，トヨタ社が開発したHuman Support Robot（HSR）\cite{hsr_paper}を標準機に採用しテストを行っている．
+我々の参加しているDSPLでは，トヨタ社が開発したHuman Support Robot（HSR）\cite{hsr_paper}を標準機に採用しテストを行っている．
 図\ref{overview_hsr}に，HSRの外観と搭載されているデバイスを示す．
 \begin{figure}[ht]
   \centering
@@ -91,7 +91,7 @@ HSRは移動台車やアームに加えて，RGB-Dカメラやマイクが搭載
 \begin{figure*}[ht]
   \centering
   \includegraphics[width=16cm]{images/FMM/solution_overview_yoko_yy2.png}
-  \caption{FMMの解法}
+  \caption{提案したFMMの解法}
   \label{solution_overview}
 \end{figure*}
 
@@ -107,36 +107,17 @@ HSRは移動台車やアームに加えて，RGB-Dカメラやマイクが搭載
 
 \section{Find My Mates}
 本節では，RoboCup@Homeで行われるタスクの一つであるFMMについて述べる．
-FMMの得点表を表\label{points_table_fmm}に示す．
+% FMMの得点表を表\label{points_table_fmm}に示す．
 FMMでは4人のゲストと1人のホストが登場し，ホストの家にゲスト全員が訪れたという状況を想定している．
 % しかし本タスクでは，ホストはゲストの名前のみを事前に知らされているが，それぞれの外見や特徴については何も知らされていない．
 しかし本タスクでは，ホストはゲストの外見や特徴については何も知らされておらず，名前のみを知らされている．
-そのため，家に訪れたゲストを見つけ出し，顔や特徴，また部屋のどこにいるのかをホストに伝えることがFMMのメインゴールである．
+そのため，ロボットが家に訪れたゲストを見つけ出し，顔や特徴，また部屋のどこにいるのかをホストに伝えることがFMMのメインゴールである．
+FMMの得点表を表\ref{points_table_fmm}に示す．
 
 FMMを遂行するためには，3次元位置を含む人物認識に加えて，人物の特徴を推定する技術が必要になる．
 また，ゲストの名前を取得するためには，音声認識の技術も不可欠である．
-% FMMにおける，評価項目と点数を表\ref{points_table_fmm}に示す．
-% \begin{table}[]
-% 	\centering
-% 	\caption{FMMの得点表}
-% 	\label{points_table_fmm}
-% 	\begin{tabular}{cccc}
-% 		\hline
-% 		動作項目                    & 評価回数 & 1回あたりの評価点    & 合計評価点 \\ \hline \hline
-% 		\multicolumn{4}{c}{\textbf{メインゴール}}                   \\ \hline
-% 		ゲストの位置報告                & 2    & 100          & 200   \\ \hline
-% 		位置の説明で，特定の一点のみを指し示せているか & 2    & 50           & 100   \\ \hline
-% 		ゲストの説明を行う               & 2    & 150          & 300   \\ \hline
-% 		\multicolumn{4}{c}{\textbf{ボーナス得点}}                   \\ \hline \hline
-% 		3人目のゲストも報告できているか        & 1    & \textbf{150} & 150   \\ \hline
-% 		3人目のゲストの特徴も報告できているか     & 1    & 250          & 250   \\ \hline
-% 		\multicolumn{4}{c}{\textbf{減点対象}}                     \\ \hline \hline
-% 		人物認識の際に，ゲストに合図を出してもらう   & 2    & -75          &       \\ \hline
-% 		ゲストの位置を教えてもらう           & 2    & -75          &       \\ \hline
-% 		ゲストがロボットの前方まで移動する       & 2    & -150         &       \\ \hline
-% 		\multicolumn{3}{c}{合計}                        & 1000  \\ \hline
-% 	\end{tabular}
-% \end{table}
+このように，FMMはヒューマンインタラクションのために必要な技術を包括的に評価することができるタスクである．
+% そのため，FMMを達成することで実環境においても
 
 \begin{table}[hb]
 	\centering
@@ -149,7 +130,7 @@ FMMを遂行するためには，3次元位置を含む人物認識に加えて�
 		ゲストの位置報告                                                   & 2  & 100          & 200  \\ \hline
 		\begin{tabular}[c]{@{}c@{}}明示的に\\ 位置を報告する\end{tabular} & 2  & 50           & 100  \\ \hline
 		\begin{tabular}[c]{@{}c@{}}ゲストの\\ 特徴報告\end{tabular}        & 2  & 150          & 300  \\ \hline
-		\multicolumn{4}{c}{\textbf{ボーナス得点}}                                                   \\ \hline
+		\multicolumn{4}{c}{\textbf{ボーナス}}                                                   \\ \hline
 		\begin{tabular}[c]{@{}c@{}}3人目の\\ ゲストも報告\end{tabular}      & 1  & \textbf{150} & 150  \\ \hline
 		\begin{tabular}[c]{@{}c@{}}3人目のゲストの\\ 特徴も報告\end{tabular}   & 1  & 250          & 250  \\ \hline
 		\multicolumn{4}{c}{\textbf{減点対象}}                                                     \\ \hline
@@ -169,14 +150,14 @@ RoboCup@Homeでは，タスクに登場する人物はボランティアから�
 
 
 \section{提案手法}
-本章では，FMMで満点を取得する解法と，HSRに実装した機能について述べる．
+本章では，FMMで満点を取得するための解法と，HSRに実装した機能について述べる．
 % FMMでは部屋に移動した後，4人のゲストを見つける必要がある．
 
 \subsection{FMMに向けた解法}
 % 私達はFMMで満点を取得するために，次のような手法を提案する．
 % 提案手法の概要を図\ref{solution_overview}に示す．
-私たちは，FMMで満点を取得するために，図\ref{solution_overview}に示す手法を提案する．
-初めに，ロボットを部屋の中央までナビゲーションさせ，部屋全体を見渡しながら人物認識を行う．
+我々は，FMMで満点を取得するために，図\ref{solution_overview}に示す手法を提案する．
+始めに，ロボットを部屋の中央までナビゲーションさせ，部屋全体を見渡しながら人物認識を行う．
 人物の認識にはRGB画像を用いるが，Depth画像も用いることで，認識した人が部屋のどこにいるのかも同時に算出する．
 % 次に，認識した人がエリア内のどこにいるかの判定を行う．これには，大きく2つの理由がある．
 % 1つは，ロケーション報告に用いるためであり，
@@ -184,7 +165,7 @@ RoboCup@Homeでは，タスクに登場する人物はボランティアから�
 次に，算出した人物の位置情報を基に，各ゲストの正面までナビゲーションを行い，音声認識を用いて名前を聞く．
 更に属性推定の手法を用いて，ゲストの性別を推定する．
 
-最後に，取得したすべての情報（人物の画像，位置，名前，性別）を集約した1枚の画像を生成し，HSRの
+最後に，取得したすべての情報（人物の画像，位置，名前，性別）を集約した1枚の画像（マップイメージ）を生成し，HSRの
 ヘッドディスプレイに表示することでホストに伝える．
 本手法で生成する画像を図\ref{solution_overview}の右側に示す．
 この生成画像ではフィールドを簡易的な画像で表現し，その上にゲストを示しているため，明示的に位置を報告することができている．
@@ -229,7 +210,8 @@ RoboCup@Homeには多くの観客がおり，また他のリーグも同時に�
 \subsection{音声認識の性能評価}
 RoboCup@Homeで使用される名前は，アメリカで一般的に用いられる名前からランダムに決定される．
 そこで，アメリカで一般的に使用されている名前から男女それぞれ名前を11個選出し，本研究で作成した音声認識の精度を検証した．
-検証はノイズの大きな環境で行い，話者とノイズの環境を変化させながらそれぞれ4度ずつ読み上げて検証を行った．
+% 検証はノイズの大きな環境で行い，話者とノイズの環境を変化させながらそれぞれ4度ずつ読み上げて検証を行った．
+検証のための音声データは，RoboCup会場で起こりやすいノイズ環境を再現して，話者やノイズの強弱を変化させながら4度づつ読み上げて録音を行った．
 % 検証データは
 
 表\ref{voice_recognition_result}に，ノイズ除去を行った場合と辞書指定を行った場合における認識結果を示す．
@@ -320,7 +302,7 @@ FMMでは，認識した人物の位置をホストに伝える必要がある�
 
 \section{現地実験結果}
 % \subsection{実験結果}
-私たちはRoboCup@HomeでFMMを2度トライし，性能評価を行った．
+我々はRoboCup@HomeでFMMを2度トライし，性能評価を行った．
 1度目のトライでは部屋中央へのナビゲーションに失敗し，ゲストから遠い位置にHSRが停止してしまった．
 % の目的地がゲストから遠い位置であったため，
 % その結果，不鮮明・不明瞭な画像を取得することとなった．
@@ -355,6 +337,10 @@ FMMでは，認識した人物の位置をホストに伝える必要がある�
 
 
 \section{考察}
+
+\subsection{ノイズ除去}
+本研究では，RoboCup@Homeの会場で音声認識を動作させるためにノイズ除去を行った．
+検証データ全体において認識率の向上は見られたが，
 
 \subsection{音声認識について}
 今回の現地実験では，FMMを2回実施したが，いずれも音声認識の結果を得ることは出来なかった．
