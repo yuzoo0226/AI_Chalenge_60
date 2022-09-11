@@ -66,15 +66,15 @@ RoboCup@Homeでは，実際の家庭環境を模したフィールドを用い�
 RoboCup@Home\cite{robocup_hp}は，ホームサービスロボットの技術発展を目的に開催されている競技会である．
 本競技会では，人間とロボットの協調を目標の一つに掲げており，
 音声認識や物体認識，ナビゲーションといったテストが動的環境下で行われている．
-そのため，より現実に近い家庭環境でロボットの性能を評価することができ，非常に注目を集めている．
+そのため，より現実に近い家庭環境でロボットの性能を評価することができ，多くの注目を集めている．
 % The RoboCup@Home league aims to develop service and assistive robot technology with high relevance for future personal domestic applications. It is the largest international annual competition for autonomous service robots and is part of the RoboCup initiative. A set of benchmark tests is used to evaluate the robots’ abilities and performance in a realistic non-standardized home environment setting. Focus lies on the following domains but is not limited to: Human-Robot-Interaction and Cooperation, Navigation and Mapping in dynamic environments, Computer Vision and Object Recognition under natural light conditions, Object Manipulation, Adaptive Behaviors, Behavior Integration, Ambient Intelligence, Standardization and System Integration. It is colocated with the RoboCup symposium.
 RoboCup@Homeには，Open Platform League，Domestic Standard Platform League（DSPL），Social Standard Platform Leagueという3つのリーグがある．
-我々の参加しているDSPLでは，トヨタ社が開発したHuman Support Robot（HSR）\cite{hsr_paper}を標準機に採用しテストを行っている．
+我々の参加しているDSPLでは，トヨタ自動車株式会社が開発したHuman Support Robot（HSR）\cite{hsr_paper}を標準機に採用しテストを行っている．
 図\ref{overview_hsr}に，HSRの外観と搭載されているデバイスを示す．
 \begin{figure}[ht]
   \centering
   \includegraphics[width=6cm]{images/hsr/hsr_explain_ja.png}
-  \caption{トヨタ社が開発したHSR}
+  \caption{トヨタ自動車株式会社が開発したHSR}
   \label{overview_hsr}
 \end{figure}
 % HSRは移動台車やアームに加えて，RGB-Dカメラやマイクが搭載されており，認識を通して多様なヒューマンインタラクションを行うことができる．
@@ -147,6 +147,7 @@ RoboCup@Homeでは，タスクに登場する人物はボランティアから�
 また，登場人物は自分の本名を使用するのではなく，事前に公開されている名前リストよりランダムに決定される．
 この名前リストには，アメリカで一般的に使用されている名前から選出した男女11個ずつの名前が含まれている．
 しかし，名前のみで男女の判別ができないように，男女で共通している名前が複数存在する．
+そのため，性別については別の手段を用いて認識する必要がある．
 
 
 \section{提案手法}
@@ -208,7 +209,7 @@ RoboCup@Homeでは，タスクに登場する人物はボランティアから�
 RoboCup@Homeは実際の家庭環境を模したフィールドで行われるが，実際の家庭環境と異なる点もある．
 その一つが，周囲の外音（ノイズ）である．
 RoboCup@Homeには多くの観客がおり，また他のリーグも同時に行われているため，実際の家庭環境では見られないようなノイズが発生する．
-さらに，RoboCup@Home会場でのノイズの特性は大会ごとに異なり，現地に行くまで不明である．
+さらに，RoboCup@Home会場でのノイズの特性は大会ごとに異なり，現地での調整が必要である．
 そのため，ノイズ除去の強度をパラメータで容易に調整可能なノイズ除去\cite{sainburg2020finding}を音声認識の前段に組み込んでいる．
 % 本ノイズ除去の手法は，ノイズ除去の強度をパラメータで容易に変化させることができる．
 % 本ノイズ除去の手法は実装が容易であり，ノイズ除去の強度も変化させることができるため採用した．
@@ -285,7 +286,7 @@ RoboCup@Homeには多くの観客がおり，また他のリーグも同時に�
 \subsection{ゲストの位置報告}
 % FMMでは，認識した人物をホストに伝える必要があるが，この際に考慮すべきこととして，
 % 認識した人が本当に部屋の中にいる人なのか，部屋の中のどこにいるのかを識別する必要がある．
-FMMでは，認識した人物の位置をホストに伝える必要があるため，認識した人物が部屋の中のどこにいるのかを識別する必要がある．
+FMMでは，認識した人物の位置をホストに伝えるために，認識した人物が部屋の中のどこにいるのかを識別する必要がある．
 % そこで本研究では，事前にrtabmap\cite{rtabmap}を用いて作成したマップに対してjsonファイルを用いて意味づけを行う．
 そこで本研究では，事前にrtabmap\cite{rtabmap}を用いて作成したマップに対して意味づけを行う．
 RoboCup@Homeではフィールドの配置が事前に公開されるため，部屋の内外と椅子などの家具がどの位置にあるのかという情報も含めて意味づけを行う．
