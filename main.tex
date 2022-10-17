@@ -42,7 +42,7 @@
 	\afil{1} 九州工業大学大学院生命体工学研究科\\
 	\afil{1} Graduate School of Life Science and Systems Engineering, Kyushu Institute of Technology, Japan\\
 	\afil{2} 日本学術振興会特別研究員DC\\
-	\afil{2} Research Fellow of the Japan Society for the Promotion of Science
+	\afil{2} Research Fellow of the Japan Society for the Promotion of Science\\
 	\afil{3} ニューロモルフィックAIハードウェア研究センター\\
 	\afil{3} Research Center for Neuromorphic AI Hardware, Kyushu Institute of Technology, Japan}
 
@@ -50,11 +50,15 @@
 % Abstract (English) comes here.......................................................
 ホームサービスロボットの技術発展を目的として，RoboCup@Homeという競技会が開催されている．
 RoboCup@Homeでは，実際の家庭環境を模したフィールドを用いてタスクを行うことで，より現実に近い環境でロボットの性能を評価することができる．
-本研究では，RoboCup@Homeのタスクの一つであるFind My Matesに向けて，満点を取得するための手法を提案する．
+% 本研究では，RoboCup@Homeのタスクの一つであるFind My Matesに向けて，満点を獲得するための手法を提案する．
+% 本研究では，RoboCup@HomeのタスクであるFind My Matesに向けて，人物認識や音声認識を用いた手法を提案する．
+本研究では，RoboCup@HomeのタスクであるFind My Matesを解くために，人物認識や音声認識を用いた動的環境でも動作する手法を提案する．
 % また，提案した手法をロボットに実装し，2022年7月にバンコクで行われたRoboCup@Homeにて現地実験を行った．
-また，提案した手法をロボットに実装し，RoboCup@Homeにて現地実験を行った．
-現地実験では満点を取得し，提案手法の有効性を示した．
-現地実験の様子は，\url{https://www.youtube.com/watch?v=ucoP8_j6Kig} にて公開している．
+% また，提案した手法をロボットに実装し，RoboCup@Homeにて現地実験を行った．
+また，提案した手法をロボットに実装し，2022年7月にバンコクで行われたRoboCup@Homeにて性能評価を行った．
+% 現地実験では満点を獲得し，提案手法の有効性を示した．
+競技会では満点を獲得し，提案手法の有効性を示した．
+競技中の様子は，\url{https://www.youtube.com/watch?v=ucoP8_j6Kig} にて公開している．
 }
 
 \maketitle
@@ -65,7 +69,7 @@ RoboCup@Homeでは，実際の家庭環境を模したフィールドを用い�
 \section{序論}
 % テストと競技表記ゆれが起きそうなので，早いうちに確定させる
 % \subsection{RoboCup@Home}
-RoboCup@Home\cite{robocup_hp}は，ホームサービスロボットの技術発展を目的に開催されている競技会である．
+RoboCup@Home\cite{robocup_hp}は，ホームサービスロボットの技術発展を目的に開催されている国際的な競技会である．
 本競技会では，人間とロボットの協調を目標の一つに掲げており，
 音声認識や物体認識，ナビゲーションといったテストが動的環境下で行われている．
 そのため，より現実に近い家庭環境でロボットの性能を評価することができ，多くの注目を集めている．
@@ -84,7 +88,7 @@ HSRは移動台車やアームに加えて，RGB-Dカメラやマイクが搭載
 
 本研究では，特にヒューマンインタラクションの性能をはかるFind My Mates（FMM）というタスクに向けて，その解法を提案する．
 また，提案した手法をHSRに実装し，2022年7月にバンコクで行われたRoboCup@Homeにて性能評価を行った．
-現地実験では満点を取得し，本手法の有効性を示した．
+競技会では満点を獲得し，本手法の有効性を示した．
 % しかし，課題も多く見つかったため，それらに対する考察も行う．
 % RoboCup@Homeのタスクの一つであるFind My Mates（FMM）に着目する．
 % FMMは人物認識や音声認識が必要となるタスクであり，特にヒューマンインタラクションの性能をはかることができる．
@@ -119,9 +123,11 @@ FMMの得点表を表\ref{points_table_fmm}に示す．
 FMMを遂行するためには，3次元位置を含む人物認識に加えて，人物の特徴を推定する技術が必要になる．
 また，ゲストの名前を取得するためには，音声認識の技術も不可欠である．
 このように，FMMはヒューマンインタラクションのために必要な技術を包括的に評価することができるタスクである．
+% ただし，人物認識や音声認識ができなかった場合においては，ゲストからロボットに近づくことや，QRコード等による音声認識のバイパスも認められている．
+
 % そのため，FMMを達成することで実環境においても
 
-\begin{table}[hb]
+\begin{table}[h]
 	\centering
 	\caption{FMMの得点表}
 	\label{points_table_fmm}
@@ -153,23 +159,40 @@ RoboCup@Homeでは，タスクに登場する人物はボランティアから�
 
 
 \section{提案手法}
-本章では，FMMで満点を取得するための解法と，HSRに実装した機能について述べる．
+本章では，FMMで満点を獲得するための解法と，HSRに実装した機能について述べる．
 % FMMでは部屋に移動した後，4人のゲストを見つける必要がある．
+\begin{figure}[t]
+  \centering
+  \subfigure[RGB画像での認識結果]{
+  	\includegraphics[height=3cm]{images/human_recognition/image.png}
+	\label{human_estimation_image}
+	% \caption{RGB画像での認識結果}
+  }
+  % \subfigure[Depth画像と合わせた3次元の位置推定]{
+  \subfigure[3次元の位置推定]{
+  	\includegraphics[height=3cm]{images/human_recognition/ss_4_trim.png}
+	\label{human_estimation_pc}
+	% \caption{Depth画像と合わせた3次元の位置推定}
+  }
+  \caption{人物位置推定アルゴリズム}
+  \label{human_estimation_explain}
+\end{figure}
 
 \subsection{FMMに向けた解法}
-% 私達はFMMで満点を取得するために，次のような手法を提案する．
+% 私達はFMMで満点を獲得するために，次のような手法を提案する．
 % 提案手法の概要を図\ref{solution_overview}に示す．
-我々はFMMで満点を取得するために，図\ref{solution_overview}に示す手法を提案する．
-始めに，ロボットを部屋の中央までナビゲーションさせ，部屋全体を見渡しながら人物認識を行う．
+我々はFMMで満点を獲得するために，図\ref{solution_overview}に示す手法を提案する．
+始めに，ロボットを部屋の中央までナビゲーションさせ，部屋全体を見渡しながら人物認識を用いて4人のゲストを見つける．
 % 人物の認識にはRGB画像を用いるが，Depth画像も用いることで，認識した人が部屋のどこにいるのかも同時に算出する．
-人物の認識にはRGB画像のみを用いるが，この時RGBDカメラのDepth情報を活用することで，それぞれの人物の座標も同時に算出する．
+認識にはRGB画像のみを用いるが，この時RGB-DカメラのDepth情報を活用することで，それぞれのゲストの位置も同時に算出する．
 % 次に，認識した人がエリア内のどこにいるかの判定を行う．これには，大きく2つの理由がある．
 % 1つは，ロケーション報告に用いるためであり，
 % もう1つは，フィールド周囲の観客の誤認識を防ぐためである．
-次に，算出した人物の位置情報を基に，各ゲストの正面までナビゲーションを行い，音声認識を用いて名前を聞く．
+次に，算出したゲストの位置を基に，各ゲストの正面までナビゲーションを行い，音声認識を用いて名前を聞く．
+% ここで，音声認識結果が得られなかった場合，QRコードを用いてゲストの名前を取得する．
 更に属性推定を用いて，ゲストの性別を推定する．
 
-最後に，取得したすべての情報（人物の画像，位置，名前，性別）を集約した1枚の画像を生成し，HSRの
+最後に，獲得したすべての情報（ゲストの画像，位置，名前，性別）を集約した1枚の画像を生成し，HSRの
 ヘッドディスプレイに表示することでホストに伝える．
 本手法で生成する画像を図\ref{solution_overview} (c)に示す．
 このように，フィールドと各ゲストの情報をまとめて表示するため，メインゴールとボーナスを同時に達成できる．
@@ -179,11 +202,17 @@ RoboCup@Homeでは，タスクに登場する人物はボランティアから�
 
 \subsection{音声認識}
 近年ではスマートフォンやスマートスピーカーなどの普及により，クラウドを用いた音声認識の研究が盛んである\cite{google_speech_api, amazon_speech_api}．
-しかし，RoboCup@Homeでは会場のネットワークが不安定である場合が想定され，安定したクラウド上での音声認識は困難である．
+しかし，RoboCup@Homeでは会場のネットワークが不安定である場合が想定され，クラウド上での安定した音声認識は困難である．
 また，ネットワークの課題は一般の家庭環境においても想定されるものであるため，オフラインでの音声認識技術が必要である．
 % を利用することは非常に有効である．
 そこで本研究では，vosk\cite{vosk_hp}と呼ばれるオフライン音声認識手法を用いる．
 
+更に，voskは認識する単語リスト（辞書）を設定することで，辞書にない単語の認識をはじくことができる．
+\ref{about_name_list}節で述べた通り，RoboCup@Homeではタスクに登場する人物の名前リストが公開されている．
+そのため，名前リストを基に辞書を作成しvoskに適用することで，認識精度向上を図る．
+
+また，RoboCup@Homeでは音声認識をQRコードによってバイパスすることが認められている．
+そこで，音声認識に失敗した場合は自動的にQRコードによる認識に切り替え，名前を取得する．
 % 本研究では，音声認識を次のように実装している．
 % まず，HSRのヘッド部に搭載されているマイクを用いて，音声認識を開始したタイミングから一定時間録音を行う．
 % 次に，録音した音声をPC側へRobot Operating System（ROS）\cite{ros_wiki}を介して送信する．
@@ -195,17 +224,19 @@ RoboCup@Homeでは，タスクに登場する人物はボランティアから�
 % 音声認識の結果の評価があっても面白い
 % 一回でも認識できなかったら，そのタスク中は音声認識をあきらめる事もかいておくべき
 
-\subsubsection{辞書設定}
-% RoboCup@Homeでは，タスクに登場する人物は本名を使用するのではなく，
-% 事前に公開している名前リストから毎回ランダムに決定され名前を割り当てられる．
-% この名前リストには，男性用と女性の用の名前が約10個ずつ用意されている．
-% ただし，名前だけで性別の区別ができないようにするために，男性と女性で共通している名前も存在する．
-\ref{about_name_list}節で述べた通り，RoboCup@Homeではタスクに登場する人物の名前リストが公開されている．
-そのため，本研究では名前リストを基にした辞書を作成し，voskに適用させることで音声認識の精度向上を図る．
-% ここ定量的な表現に直す
-% 辞書を設定していない場合では，名前を話してもまったく違う単語として認識されることがほとんどであったが，
-% 辞書設定をすることで認識率は飛躍的に向上した．
-辞書を設定していない場合では，発話した名前が別の単語として認識されることが多かったが，辞書設定をすることで誤認識が減少した．
+% \subsubsection{辞書設定}
+% % RoboCup@Homeでは，タスクに登場する人物は本名を使用するのではなく，
+% % 事前に公開している名前リストから毎回ランダムに決定され名前を割り当てられる．
+% % この名前リストには，男性用と女性の用の名前が約10個ずつ用意されている．
+% % ただし，名前だけで性別の区別ができないようにするために，男性と女性で共通している名前も存在する．
+% \ref{about_name_list}節で述べた通り，RoboCup@Homeではタスクに登場する人物の名前リストが公開されている．
+% そのため，名前リストに含まれる単語のみを認識すればよい．
+% そこで，名前リストを基に辞書を作成し，辞書に含まれる単語のみを認識
+% そこで本研究では，名前リストを基にした辞書を作成し，voskに適用させることで音声認識の精度向上を図る．
+% % ここ定量的な表現に直す
+% % 辞書を設定していない場合では，名前を話してもまったく違う単語として認識されることがほとんどであったが，
+% % 辞書設定をすることで認識率は飛躍的に向上した．
+% 辞書を設定していない場合では，発話した名前が別の単語として認識されることが多かったが，辞書設定をすることで誤認識が減少した．
 
 \subsubsection{ノイズ除去}
 RoboCup@Homeは実際の家庭環境を模したフィールドで行われるが，実際の家庭環境と異なる点もある．
@@ -243,26 +274,27 @@ RoboCup@Homeには多くの観客がおり，また他のリーグも同時に�
 % \end{table}
 
 \subsection{人物認識}
-\begin{figure}[t]
-  \centering
-  \subfigure[RGB画像での認識結果]{
-  	\includegraphics[height=3cm]{images/human_recognition/image.png}
-	\label{human_estimation_image}
-	% \caption{RGB画像での認識結果}
-  }
-  % \subfigure[Depth画像と合わせた3次元の位置推定]{
-  \subfigure[3次元の位置推定]{
-  	\includegraphics[height=3cm]{images/human_recognition/ss_4_trim.png}
-	\label{human_estimation_pc}
-	% \caption{Depth画像と合わせた3次元の位置推定}
-  }
-  \caption{人物位置推定アルゴリズム}
-  \label{human_estimation_explain}
-\end{figure}
+% \begin{figure}[t]
+%   \centering
+%   \subfigure[RGB画像での認識結果]{
+%   	\includegraphics[height=3cm]{images/human_recognition/image.png}
+% 	\label{human_estimation_image}
+% 	% \caption{RGB画像での認識結果}
+%   }
+%   % \subfigure[Depth画像と合わせた3次元の位置推定]{
+%   \subfigure[3次元の位置推定]{
+%   	\includegraphics[height=3cm]{images/human_recognition/ss_4_trim.png}
+% 	\label{human_estimation_pc}
+% 	% \caption{Depth画像と合わせた3次元の位置推定}
+%   }
+%   \caption{人物位置推定アルゴリズム}
+%   \label{human_estimation_explain}
+% \end{figure}
 本研究では人物認識の手法にLightweight Human Pose Estimation\cite{light-openpose}を用いた．
 本手法は処理が非常に軽量であり，CPUでも高速に動作する手法である．
 % 今回使用したPCでは，x fpsで動作しており，HSRのカメラ周期と同等な速度である為，リアルタイム動作を実現できていると言える．
-本手法を用いることで，図3 (a)に示すように，HSRより取得したRGB画像から人物認識を行うことができる．
+% 本手法を用いることで，図3 (a)に示すように，HSRより取得したRGB画像から人物認識を行うことができる．
+本手法を用いることで，図3 (a)に示すように，RGB画像から人物認識を行うことができる．
 次に，RGB画像における認識結果と，Depth画像を合わせることで，人物の3次元位置推定を行う．
 図3 (b)に，人物の3次元位置推定を行った結果を示す．
 % 本研究では，人物を3次元的に認識する必要があるため，RGB画像から人物認識を行った後，
@@ -290,7 +322,8 @@ RoboCup@Homeには多くの観客がおり，また他のリーグも同時に�
 % 認識した人が本当に部屋の中にいる人なのか，部屋の中のどこにいるのかを識別する必要がある．
 FMMでは，認識した人物の位置をホストに伝えるために，認識した人物が部屋の中のどこにいるのかを識別する必要がある．
 % そこで本研究では，事前にrtabmap\cite{rtabmap}を用いて作成したマップに対してjsonファイルを用いて意味づけを行う．
-そこで本研究では，事前にrtabmap\cite{rtabmap}を用いて作成したマップに対して意味づけを行う．
+% そこで本研究では，事前にrtabmap\cite{rtabmap}を用いて作成したマップに対して意味づけを行う．
+そこで本研究では，Simultaneous Localization and Mappingを用いて事前に作成したマップに対して意味づけを行う．
 RoboCup@Homeではフィールドの配置が事前に公開されるため，部屋の内外と椅子などの家具がどの位置にあるのかという情報も含めて意味づけを行う．
 図3に示した3次元の人物認識に対して，フィールドの意味づけを行った結果を図\ref{human_where_map}に示す．
 % と，フィールド内のどこに椅子があるのかといった家具の情報も付加する．
@@ -306,39 +339,52 @@ RoboCup@Homeではフィールドの配置が事前に公開されるため，�
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{現地実験概要}
-提案手法をHSRに実装し，2022年7月にバンコクで行われたRoboCup@Homeで性能評価を行った．
-図\ref{robocup_field}に，実際に使用されたフィールドを示す．
-% RoboCup@HomeのDSPLでは，HSRにPCを接続して使用することが認められている．
-4つのルームがある中で，FMMはリビングルームにて実施された．
-現地の実際の写真を図\ref{onsite_overview_1}に示す．
-
-また，現地環境における音声認識の精度検証も行った．
-RoboCup@Homeで使用される名前は，アメリカで一般的に用いられる名前からランダムに決定される．
-そこで，アメリカで一般的に使用されている名前から男女それぞれ11個選出し，
-本番に近い環境で話者やノイズの強弱を変化させながら各名前を4度ずつ読み上げ，計88個の検証データを作成し評価を行った．
-
-本研究で使用したPC環境は，CPU：Intel core, GPU：Geforce RTX 1080，メモリ：64GB，OS：Ubuntu18.04である．
-また，PCとHSRの通信にはRobot Operating System \cite{ros_wiki}を用いている．
+% \section{現地実験概要}
+\section{競技概要}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=5cm]{images/robocup/arenaBangkok_rotate.png}
+  \includegraphics[width=5cm]{images/robocup/arenaBangkok_rotate_trim_yy2.png}
   % \caption{バンコクで開催されたRoboCup@Home2022で使用されたフィールド}
   \caption{RoboCup@Home2022で使用されたフィールド}
   \label{robocup_field}
 \end{figure}
 \begin{figure}[ht]
   \centering
-  \includegraphics[height=2.2cm]{images/robocup/FMM_onsite_overview_1.jpg}
-  \includegraphics[height=2.2cm]{images/robocup/FMM_onsite_overview_3.jpg}
+  \subfigure[1度目のトライ]{
+  	\includegraphics[height=2.2cm]{images/robocup/FMM_onsite_overview_1.jpg}
+  	\label{1st_trial_FMM}
+  }
+  \subfigure[2度目のトライ]{
+  	\includegraphics[height=2.2cm]{images/robocup/FMM_onsite_overview_3.jpg}
+  	\label{2nd_trial_FMM}
+  }
+  % \includegraphics[height=2.2cm]{images/robocup/FMM_onsite_overview_1.jpg}
+  % \includegraphics[height=2.2cm]{images/robocup/FMM_onsite_overview_3.jpg}
   \caption{FMMが行われた実際の会場}
   \label{onsite_overview_1}
 \end{figure}
+提案手法をHSRに実装し，2022年7月にバンコクで行われたRoboCup@Homeで性能評価を行った．
+図\ref{robocup_field}に，実際に使用されたフィールドを示す．
+% RoboCup@HomeのDSPLでは，HSRにPCを接続して使用することが認められている．
+4つのルームがある中で，FMMはリビングルームにて実施された．
+現地の実際の写真を図\ref{onsite_overview_1}に示す．
+また，現地環境における音声認識の精度検証も併せて行った．
+% RoboCup@Homeで使用される名前は，アメリカで一般的に用いられる名前からランダムに決定される．
+% そこで，アメリカで一般的に使用されている名前から男女それぞれ11個選出し，
+% 本番に近い環境で話者やノイズの強弱を変化させながら各名前を4度ずつ読み上げ，計88個の検証データを作成し評価を行った．
+
+本研究で使用したPCは，CPU：Intel core i7-7820HK, GPU：Geforce RTX 1080，メモリ：32GB，OS：Ubuntu18.04である．
+また，PCとHSRの通信にはRobot Operating System \cite{ros_wiki}を用いている．
 
 
-\section{現地実験結果}
+\section{競技結果}
 
 \subsection{音声認識の性能評価}
+始めに，提案手法における音声認識の性能評価を行った．
+実験に際して，アメリカで一般的に使用されている名前から男女それぞれ11個を選出し，
+本番に近い環境で話者やノイズの強弱を変化させながら4度ずつ読み上げ，計88個のデータを作成した．
+% RoboCup@Homeで使用される名前は，アメリカで一般的に用いられる名前からランダムに決定される．
+% そこで，
 表\ref{voice_recognition_result}に，ノイズ除去と辞書指定の有無による認識結果を示す．
 結果より，辞書指定を行い，ノイズ除去を行った手法が最も精度が高くなっていることが確認できた．
 しかし，辞書設定を行っていない場合においては，ノイズ除去を行うことで認識率が低下している．
@@ -358,7 +404,7 @@ RoboCup@Homeで使用される名前は，アメリカで一般的に用いら�
 	\label{voice_recognition_result}
 \end{table}
 
-\subsection{FMMの実験結果}
+\subsection{FMMの結果}
 我々はRoboCup@HomeでFMMを2度トライし，性能評価を行った．
 1度目のトライでは部屋中央へのナビゲーションに失敗し，ゲストから遠い位置にHSRが停止してしまった．
 % の目的地がゲストから遠い位置であったため，
@@ -370,8 +416,9 @@ RoboCup@Homeで使用される名前は，アメリカで一般的に用いら�
 
 % 2度目のトライは，1度目にあったナビゲーションの目的地が遠いという問題点を修正してから行った．
 2度目のトライは，1度目にあったナビゲーションの問題点を修正してからトライした．
-その結果，ゲストをより近い位置から認識することが出来たため，鮮明な画像を得ることができ，属性推定も間違いなく動作した．
-しかし，音声認識部においてはゲストの前までナビゲーションを行うことは出来たが，名前を聞き取ることは出来ず，またQRコードのバイパスを使用することとなった．
+% その結果，ゲストをより近い位置から認識することが出来たため，鮮明な画像を得ることができ，属性推定も間違いなく動作した．
+その結果，ゲストをより近い位置から認識することが出来たため，取得画像が鮮明になり属性推定も間違いなく動作した．
+しかし，音声認識部においてはゲストの前までナビゲーションを行うことは出来たが，名前を聞き取ることは出来ず，再度QRコードのバイパスを使用することとなった．
 2度目のトライにおいて，フィールド内の状況を説明するために生成した画像を図\ref{result_FMM_2}に示す．
 \begin{figure}[t]
   \centering
@@ -379,9 +426,9 @@ RoboCup@Homeで使用される名前は，アメリカで一般的に用いら�
   \caption{2回目のトライで作成したマップイメージ}
   \label{result_FMM_2}
 \end{figure}
-今回のトライでは，ゲストは図\ref{onsite_overview_1}の通りに座っており，生成画像では全員の座っている位置を間違いなく報告できている．
-更に，性別と名前も正解しているため，結果として満点の1000点を取得した．
-% 参加チームごとのFMMで取得した点数を表\ref{fmm_points_eachcheam}にまとめる．
+今回のトライでは，ゲストは図\ref{onsite_overview_1}(b)の通りに座っており，生成画像では全員の座っている位置を間違いなく報告できている．
+更に，性別と名前も正解しているため，結果として満点の1000点を獲得した．
+% 参加チームごとのFMMで獲得した点数を表\ref{fmm_points_eachcheam}にまとめる．
 % \begin{table}[h]
 % \begin{tabular}{ll}
 %                              & Find My Mates \\
@@ -403,11 +450,12 @@ RoboCup@Homeで使用される名前は，アメリカで一般的に用いら�
 % しかし，全体の認識精度は向上しているため，ノイズ除去は音声認識に有効な手段であると言える．
 今後は，音声認識にとってより有効なノイズ除去の手法について検討を進めていく必要がある．
 
-\subsection{音声認識について}
-今回の現地実験では，FMMを2回実施したが，いずれも音声認識の結果を得ることは出来なかった．
+\subsection{音声認識}
+% 今回の現地実験では，FMMを2回実施したが，いずれも音声認識の結果を得ることは出来なかった．
+我々はRoboCup@Home2022でFMMを2度実施したが，音声認識が未検出となり結果を得ることができなかった．
 % 原因として，音声認識中のGraphical User Interface（GUI）が発話者に伝わっておらず，音声認識時間外に発話されたことと，発話者の声量が小さく認識が困難であったことが考えられる．
 1つ目の原因として，音声認識時間外に発話されたことが挙げられる．
-まず，HSRはマイクとスピーカが別デバイスであるため，HSRが発話している間に音声認識を行うと，HSRの音声もマイクに入力されてしまう．
+HSRはマイクとスピーカが別デバイスであるため，HSRが発話している間に音声認識を行うと，HSRの音声もマイクに入力されてしまう．
 % また，本研究で実装した音声認識はゲストの発話状態にかかわらず一定時間のみ行うため，発話のタイミングが音声認識の結果に大きく影響してしまう．
 また，本研究で実装した音声認識はゲストの発話状態にかかわらず一定時間のみ行うため，認識精度が発話タイミングによって大きく変動してしまう．
 % そこで，HSRのヘッドディスプレイに認識中を示すようなGUIを作成していたが，このGUIが発話者に伝わっておらず認識時間外に発話されることがあった．
@@ -420,7 +468,7 @@ RoboCup@Homeで使用される名前は，アメリカで一般的に用いら�
 今後は，発話のタイミングに応じて音声認識を開始，終了するような機能を作成する必要がある．
 また，発話者の音声が小さいことも考慮して，音声強調\cite{voice_enhancement_1, voice_enhancement_2}の技術を活用する必要がある．
 
-\subsection{位置推定について}
+\subsection{位置推定}
 提案手法では，HSRが事前に取得したマップのどこがフィールドで，どこに椅子やソファがあるのかという情報を事前に与える必要がある．
 RoboCup@Homeのルールでは，事前に部屋の情報が公開されることになっているが，本大会では椅子の位置が何度も変更されたため，対応が困難であった．
 % 今後はロバスト性の高い3次元的な物体認識手法\cite{sun2022onepose}を用いて，家具の位置変化に頑健なシステムを構築する必要があると考える．
@@ -429,7 +477,7 @@ RoboCup@Homeのルールでは，事前に部屋の情報が公開されるこ�
 
 \section{結論}
 本研究では，国際的な競技会であるRoboCup@Homeで行われるFMMに向けての解法を提案し，実機実装を通してその性能評価を行った．
-現地実験で，2回目のトライで満点を取得し，提案手法の有効性を示した．
+競技会では2回目のトライで満点を獲得し，提案手法の有効性を示した．
 一方で，音声認識やナビゲーションに関しての課題点も見つかったため，今後はこれらの課題を解決するために研究を続けていく必要がある．
 
 \begin{thebibliography}{99}
@@ -477,8 +525,8 @@ pp.e1008228,
 D. Osokin, "Real-time 2d multi-person pose estimation on cpu: Lightweight openpose." arXiv preprint arXiv:1811.12004 (2018).
 % Osokin, Daniil. "Real-time 2d multi-person pose estimation on cpu: Lightweight openpose." arXiv preprint arXiv:1811.12004 (2018).
 
-\bibitem{rtabmap}
-M. Labbé and F. Michaud, “RTAB-Map as an Open-Source Lidar and Visual SLAM Library for Large-Scale and Long-Term Online Operation,” in Journal of Field Robotics, vol. 36, no. 2, pp. 416–446, (2019).
+% \bibitem{rtabmap}
+% M. Labbé and F. Michaud, “RTAB-Map as an Open-Source Lidar and Visual SLAM Library for Large-Scale and Long-Term Online Operation,” in Journal of Field Robotics, vol. 36, no. 2, pp. 416–446, (2019).
 
 \bibitem{ros_wiki}
 Robot Operating System Wiki. \url{https://wiki.ros.org/}, (Accessed 2022-09-01).
