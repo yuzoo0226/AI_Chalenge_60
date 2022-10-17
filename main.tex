@@ -15,10 +15,12 @@
 
 % 和文タイトル
 % \title{Find My Matesに向けた解法の提案と実機での性能評価}
-\title{RoboCup@Homeタスク：Find My Matesに向けた解法の提案とロボット実機での性能評価}
+% \title{RoboCup@Homeタスク：Find My Matesに向けた解法の提案とロボット実機での性能評価}
+\title{RoboCup@Homeのヒューマンインタラクションタスク\\に向けた解法の提案}
 
 % 英文タイトル
-\etitle{Solving RoboCup@Home Task: Find My Mates and Evaluation Using Domestic Standard Robot}
+% \etitle{Solving RoboCup@Home Task: Find My Mates and Evaluation Using Domestic Standard Robot}
+\etitle{Proposal for Solution of Human Interaction Task in RoboCup@Home}
 
 % 著者名:
 %	・各著者を\quad（全角空白）区切りで列挙
@@ -76,7 +78,7 @@ RoboCup@Home\cite{robocup_hp}は，ホームサービスロボットの技術発
 % The RoboCup@Home league aims to develop service and assistive robot technology with high relevance for future personal domestic applications. It is the largest international annual competition for autonomous service robots and is part of the RoboCup initiative. A set of benchmark tests is used to evaluate the robots’ abilities and performance in a realistic non-standardized home environment setting. Focus lies on the following domains but is not limited to: Human-Robot-Interaction and Cooperation, Navigation and Mapping in dynamic environments, Computer Vision and Object Recognition under natural light conditions, Object Manipulation, Adaptive Behaviors, Behavior Integration, Ambient Intelligence, Standardization and System Integration. It is colocated with the RoboCup symposium.
 RoboCup@Homeには，Open Platform League，Domestic Standard Platform League（DSPL），Social Standard Platform Leagueという3つのリーグがある．
 我々の参加しているDSPLでは，トヨタ自動車株式会社が開発したHuman Support Robot（HSR）\cite{hsr_paper}を標準機に採用しテストを行っている．
-図\ref{overview_hsr}に，HSRの外観と搭載されているデバイスを示す．
+図\ref{overview_hsr}に，HSRの外観と搭載されている主なデバイスを示す．
 \begin{figure}[ht]
   \centering
   \includegraphics[width=6cm]{images/hsr/hsr_explain_ja.png}
@@ -184,13 +186,15 @@ RoboCup@Homeでは，タスクに登場する人物はボランティアから�
 我々はFMMで満点を獲得するために，図\ref{solution_overview}に示す手法を提案する．
 始めに，ロボットを部屋の中央までナビゲーションさせ，部屋全体を見渡しながら人物認識を用いて4人のゲストを見つける．
 % 人物の認識にはRGB画像を用いるが，Depth画像も用いることで，認識した人が部屋のどこにいるのかも同時に算出する．
-認識にはRGB画像のみを用いるが，この時RGB-DカメラのDepth情報を活用することで，それぞれのゲストの位置も同時に算出する．
+% 認識にはRGB画像のみを用いるが，この時RGB-DカメラのDepth情報を活用することで，それぞれのゲストの位置も同時に算出する．
+認識にはRGB画像のみを用いるが，Depth情報も活用することでそれぞれのゲストの位置も同時に算出する．
 % 次に，認識した人がエリア内のどこにいるかの判定を行う．これには，大きく2つの理由がある．
 % 1つは，ロケーション報告に用いるためであり，
 % もう1つは，フィールド周囲の観客の誤認識を防ぐためである．
 次に，算出したゲストの位置を基に，各ゲストの正面までナビゲーションを行い，音声認識を用いて名前を聞く．
 % ここで，音声認識結果が得られなかった場合，QRコードを用いてゲストの名前を取得する．
-更に属性推定を用いて，ゲストの性別を推定する．
+% 更に属性推定を用いて，ゲストの性別を推定する．
+更にClass-Specific Residual Attention \cite{CSRA}という属性推定手法を用いて，ゲストの性別を推定する．
 
 最後に，獲得したすべての情報（ゲストの画像，位置，名前，性別）を集約した1枚の画像を生成し，HSRの
 ヘッドディスプレイに表示することでホストに伝える．
@@ -207,7 +211,8 @@ RoboCup@Homeでは，タスクに登場する人物はボランティアから�
 % を利用することは非常に有効である．
 そこで本研究では，vosk\cite{vosk_hp}と呼ばれるオフライン音声認識手法を用いる．
 
-更に，voskは認識する単語リスト（辞書）を設定することで，辞書にない単語の認識をはじくことができる．
+% 更に，voskは認識する単語リスト（辞書）を設定することで，辞書にない単語の認識をはじくことができる．
+更に，voskは認識する単語リスト（辞書）を指定することで，辞書にない単語を認識から除くことができる．
 \ref{about_name_list}節で述べた通り，RoboCup@Homeではタスクに登場する人物の名前リストが公開されている．
 そのため，名前リストを基に辞書を作成しvoskに適用することで，認識精度向上を図る．
 
@@ -335,7 +340,7 @@ RoboCup@Homeではフィールドの配置が事前に公開されるため，�
   \caption{図3で認識した結果に意味づけを行った結果}
   \label{human_where_map}
 \end{figure}
-この場合では，ゲストはフィールド内の左側の椅子に座っており，それを正しく判定できている．
+この場合では，ゲストはフィールド内の左側の椅子に座っていると正しく判定している．
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -363,19 +368,23 @@ RoboCup@Homeではフィールドの配置が事前に公開されるため，�
   \caption{FMMが行われた実際の会場}
   \label{onsite_overview_1}
 \end{figure}
-提案手法をHSRに実装し，2022年7月にバンコクで行われたRoboCup@Homeで性能評価を行った．
-図\ref{robocup_field}に，実際に使用されたフィールドを示す．
-% RoboCup@HomeのDSPLでは，HSRにPCを接続して使用することが認められている．
-4つのルームがある中で，FMMはリビングルームにて実施された．
-現地の実際の写真を図\ref{onsite_overview_1}に示す．
-また，現地環境における音声認識の精度検証も併せて行った．
+% 提案手法をHSRに実装し，2022年7月にバンコクで行われたRoboCup@Homeで性能評価を行った．
+我々は2022年7月にバンコクで行われたRoboCup@Homeに参加し，提案手法の評価と現地環境における音声認識の精度検証を行った．
+RoboCup@HomeではHSRの制御用にPCを1台使用することが認められているため，以下のようなPCを使用した．
+CPU：Intel core i7-7820HK, GPU：Geforce RTX 1080，メモリ：32GB，OS：Ubuntu18.04．
+また，PCとHSRの通信にはRobot Operating System \cite{ros_wiki}を用いている．
+% 4つのルームがある中で，FMMはリビングルームにて実施された．
+
+実際に使用されたリビングルームの概略図を図\ref{robocup_field}に，競技中の様子を図\ref{onsite_overview_1}に示す．
+% また，現地環境における音声認識の精度検証も併せて行った．
 % RoboCup@Homeで使用される名前は，アメリカで一般的に用いられる名前からランダムに決定される．
 % そこで，アメリカで一般的に使用されている名前から男女それぞれ11個選出し，
 % 本番に近い環境で話者やノイズの強弱を変化させながら各名前を4度ずつ読み上げ，計88個の検証データを作成し評価を行った．
 
-本研究で使用したPCは，CPU：Intel core i7-7820HK, GPU：Geforce RTX 1080，メモリ：32GB，OS：Ubuntu18.04である．
-また，PCとHSRの通信にはRobot Operating System \cite{ros_wiki}を用いている．
-
+% 本研究で使用したPCは，CPU：Intel core i7-7820HK, GPU：Geforce RTX 1080，メモリ：32GB，OS：Ubuntu18.04である．
+% RoboCup＠HomeではHSRの制御用にPCを1台使用することが認められているため，以下のPCを使用した．
+% CPU：Intel core i7-7820HK, GPU：Geforce RTX 1080，メモリ：32GB，OS：Ubuntu18.04．
+% また，PCとHSRの通信にはRobot Operating System \cite{ros_wiki}を用いている．
 
 \section{競技結果}
 
@@ -386,10 +395,12 @@ RoboCup@Homeではフィールドの配置が事前に公開されるため，�
 % RoboCup@Homeで使用される名前は，アメリカで一般的に用いられる名前からランダムに決定される．
 % そこで，
 表\ref{voice_recognition_result}に，ノイズ除去と辞書指定の有無による認識結果を示す．
-結果より，辞書指定を行い，ノイズ除去を行った手法が最も精度が高くなっていることが確認できた．
-しかし，辞書設定を行っていない場合においては，ノイズ除去を行うことで認識率が低下している．
+ノイズ除去と辞書指定を行っていないの場合の精度は13.6\%であったが，辞書指定を行うことで55.7\%向上し69.3\%となった．
+% 辞書指定なしでの精度は約10\%であったが，辞書指定ありでは約70\%であった．
+加えてノイズ除去を行うことによって，精度が2.3\%向上し71.6\%で最も高くなった．
+しかし，辞書指定を行っていない場合では，ノイズ除去を行うことで精度が3.4\%低下した．
 % また，辞書指定を行った場合でも，ノイズ除去を行ったことでかえって認識に失敗するデータが3個あることが確認できた．
-また，辞書指定を行った場合でも，ノイズ除去を行ったことでかえって認識に失敗するデータがあることも確認できた．
+% また，辞書指定を行った場合でも，ノイズ除去を行ったことでかえって認識に失敗するデータがあることも確認できた．
 \begin{table}[b]
 	\centering
 	\caption{音声認識の精度}
@@ -506,6 +517,9 @@ Google Speech-to-Text. \url{https://cloud.google.com/speech-to-text}, (Accessed 
 
 \bibitem{amazon_speech_api}
 Amazon Transcribe \url{https://aws.amazon.com/jp/transcribe/}, (Accessed 2022-09-03).
+
+\bibitem{CSRA}
+K. Zhu and J. Wu, "Residual Attention: A Simple but Effective Method for Multi-Label Recognition," 2021 IEEE/CVF International Conference on Computer Vision (ICCV), pp. 184-193 (2021).
 
 \bibitem{vosk_hp}
 α cephei Vosk Offline speech recognition. \url{https://alphacephei.com/vosk/}, (Accessed 2022-09-04).
