@@ -3,6 +3,8 @@
 ## 投稿先
 
 - [第60回 AIチャレンジ研究会](https://www.osaka-kyoiku.ac.jp/~challeng/SIG-Challenge-060/)
+- [論文](https://www.jstage.jst.go.jp/article/jsaisigtwo/2022/Challenge-060/2022_07/_article/-char/ja)
+- **研究会優秀賞受賞**
 
 ## 章立て
 
